@@ -46,8 +46,10 @@
     <h2>Man of the series</h2>
     <div>
       {%for record in records%}
-      <div>{{record['player']}}</div>
+      <div>Player:{{record['p_name']}}</div>
       <div>runs:{{record['runs']}}</div>
+      <div>wickets:{{record['wickets']}}</div>
+      <div>Country:{{record['country']}}</div>
       
       {% endfor %}
     </div>
