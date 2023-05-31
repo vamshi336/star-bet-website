@@ -44,14 +44,20 @@
      <h2>About Professional bet</h2>
     <p>Professional bet is a betting platfom, designed and developed by Vamshi Lingareddy, A betting proffesional who aspired to become professional in betting</p>
     <h2>Man of the series</h2>
-    <div>
-      {%for record in records%}
-      <div>Player:{{record['p_name']}}</div>
-      <div>runs:{{record['runs']}}</div>
-      <div>wickets:{{record['wickets']}}</div>
-      <div>Country:{{record['country']}}</div>
-      
-      {% endfor %}
+    <table>
+  <tr>
+    <th>Player</th>
+    <th>runs</th>
+    <th>wickets</th>
+    <th>country</th>
+    <th>ratio(x)</th>
+  </tr>
+  <tr>
+  {%for record in records%}
+      {%include 'statsitem.html'%}
+  {% endfor %}
+    </table>
+    
     </div>
      <h2>world cup final winner</h2>
     <div>
