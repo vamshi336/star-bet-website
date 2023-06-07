@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine, text
 
 engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
-connection_string = "mysql+pymysql://9tclv14q8087m4kxhp3d:pscale_pw_6mnUhgP1s7Npsxfd8D7ROYa75tLWMXXlVnFVCtipLO2@aws.connect.psdb.cloud/starbetting?charset=utf8mb4"
+import os
 
-engine = create_engine(connection_string,
+my_secret = os.environ['DB_CONNECTION_STRING']
+
+engine = create_engine(my_secret,
                        connect_args={"ssl": {
                          "ssl_ca": "/etc/ssl/cert.pem"
                        }})
