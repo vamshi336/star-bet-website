@@ -1,75 +1,79 @@
 <!DOCTYPE html>
 <html>
- 
+
 <head>
     <title>Professional Bet</title>
 </head>
 <style>
-  h1{
-    font-size: 40px;
-    font-family: Roboto;
-    font-weight: normal;
-    color: rgb(40,250,0);
-    text-align: center;
-  }
-  #banner {
-    width: 30%;
-    height: 360px;
-    object-fit: cover;
-  }
-  
-  h2{
-    font-family: Roboto;
-    font-size: 32px;
-    color: rgb(300,210,0);
-    text-align: center;
-  }
-  p{
-    font-family: roboto;
-    font: size; 32px;
-    color: rgb(210, 22, 10);
-    text-align: center;
-  }
-  #container  {
-    max-width: 520px;
-    margin : 0 auto ;
-  }
+    h1 {
+        font-size: 40px;
+        font-family: Roboto;
+        font-weight: normal;
+        color: rgb(40, 250, 0);
+        text-align: center;
+    }
+
+    #banner {
+        width: 30%;
+        height: 360px;
+        object-fit: cover;
+    }
+
+    h2 {
+        font-family: Roboto;
+        font-size: 32px;
+        color: rgb(300, 210, 0);
+        text-align: center;
+    }
+
+    p {
+        font-family: roboto;
+        font-size: 32px;
+        color: rgb(210, 22, 10);
+        text-align: center;
+    }
+
+    #container {
+        max-width: 520px;
+        margin: 0 auto;
+    }
 </style>
- 
+
 <body>
-  <div id="container">
-    <h1>Welcome To Professional bet</h1> 
-  {% include 'nav.html'%}
-    <img id='banner' src="https://professionalbet.vamshireddy19.repl.co/static/myssor.jpg" >
-     <h2>About Professional bet</h2>
-    <p>Professional bet is a betting platfom, designed and developed by Vamshi Lingareddy, A betting proffesional who aspired to become professional in betting</p>
-    <h2>Man of the series</h2>
-    <table>
-  <tr>
-    <th>Player</th>
-    <th>runs</th>
-    <th>wickets</th>
-    <th>country</th>
-    <th>ratio(x</th>
-  </tr>
-  <tr>
-  {%for record in records%}
-      {%include 'statsitem.html'%}
-  {% endfor %}
-    </table>
-    
+    <div id="container">
+        <h1>Welcome To Professional bet</h1>
+        {% include 'nav.html'%}
+        <img id='banner'
+            src="https://professionalbet.vamshireddy19.repl.co/static/myssor.jpg">
+        <h2>About Professional bet</h2>
+        <p>Professional bet is a betting platform, designed and developed by Vamshi Lingareddy, a betting professional who aspired to become professional in betting.</p>
+        <h2>Man of the series</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Runs</th>
+                    <th>Wickets</th>
+                    <th>Country</th>
+                    <th>Bet</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record['p_name'] }}</td>
+                    <td>{{ record['runs'] }}</td>
+                    <td>{{ record['wickets'] }}</td>
+                    <td>{{ record['country'] }}</td>
+                    <td><button class="action-button" data-column="2">Place bet</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button>Contact us</button>
     </div>
-     <h2>world cup final winner</h2>
-    <div>
-      {%for bet in bets%}
-      <div>{{bet}}</div>
-      {% endfor %}
-      
-    </div>
-    
-     <button>contact us</button>
-  </div>
 </body>
- 
+
 </html>
 
