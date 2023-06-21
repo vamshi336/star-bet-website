@@ -1,0 +1,9 @@
+
+<div>Bet application</div>
+<form action="{{ url_for('apply_to_jobs', id=job_dict['id']) }}" method="POST">
+  <label>Amount:</label>
+  <input type="number" name="amount" min="0" max="10000" placeholder="10000" />
+  <input type="submit" value="Submit">
+</form>
+
+

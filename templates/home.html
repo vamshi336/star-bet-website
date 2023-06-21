@@ -65,7 +65,11 @@
                     <td>{{ record['runs'] }}</td>
                     <td>{{ record['wickets'] }}</td>
                     <td>{{ record['country'] }}</td>
-                    <td><button class="action-button" data-column="2">Place bet</button></td>
+                    <td>
+                    <a href="https://star-bet-website.vamshireddy19.repl.co/admin/{{record['id']}}">
+                    <button class="action-button" data-column="2">Place bet</button>
+                    </a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

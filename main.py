@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for
-from database import load_stats_from_db
+from flask import Flask, render_template, redirect, url_for, request
+from database import load_stats_from_db, get_stats_from_db, row_to_dict
+from flask import jsonify
 
 app = Flask(__name__)
 
@@ -25,8 +26,12 @@ def wallet():
 
 @app.route('/sinin', methods=['POST', 'GET'])
 def button_clicked():
-  # Handle button click logic here
   return render_template('sinin.html')
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+  return render_template("login.html")
 
 
 @app.route('/sinup', methods=['POST', 'GET'])
@@ -59,9 +64,20 @@ def signup():
   return "Registration successful!"
 
 
-@app.route('/admin')
-def gobackhome():
-  return redirect(url_for("hallo"))
+@app.route("/admin/<int:id>")
+def show_stats(id):
+  job = get_stats_from_db(id)
+  if job is None:
+    return "Job not found", 404
+  else:
+    job_dict = row_to_dict(job)  # Convert Row object to dictionary
+    return render_template("admin.html", job_dict=job_dict)
+
+
+@app.route('/admin/<int:id>/apply', methods=['POST'])
+def apply_to_jobs(id):
+  data = request.form.to_dict()
+  return render_template('betplaced.html', DATA=data)
 
 
 if __name__ == '__main__':

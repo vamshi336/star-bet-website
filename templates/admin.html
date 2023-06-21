@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Player Performance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .player-info h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .player-info p {
+            margin: 0;
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="player-info">
+        <h3>Player Name:</h3>
+        <p>{{ job_dict.p_name }}</p>
+    </div>
+    <div class="player-info">
+        <h3>Runs:</h3>
+        <p>{{ job_dict.runs }}</p>
+    </div>
+    <div class="player-info">
+        <h3>Wickets:</h3>
+        <p>{{ job_dict.wickets }}</p>
+    </div>
+    <div class="player-info">
+        <h3>Country:</h3>
+        <p>{{ job_dict.country }}</p>
+    </div>
+  {%include 'aplication.html'%}
+</body>
+
+</html>
