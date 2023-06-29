@@ -40,3 +40,9 @@ def get_stats_from_db(id=None):
       return None
     else:
       return rows[0]
+
+
+def add_betto_db(amount):
+  query = "INSERT INTO bettable (amount) VALUES (:b_amount)"
+  with engine.connect() as conn:
+    conn.execute(text(query).params(b_amount=amount))

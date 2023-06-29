@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
-from database import load_stats_from_db, get_stats_from_db, row_to_dict
+from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db
 from flask import jsonify
 
 app = Flask(__name__)
@@ -77,6 +77,8 @@ def show_stats(id):
 @app.route('/admin/<int:id>/apply', methods=['POST'])
 def apply_to_jobs(id):
   data = request.form.to_dict()
+  amount = data.get('amount')  # Extract the 'amount' value from the dictionary
+  add_betto_db(amount)  # Pass the 'amount' value as an argument
   return render_template('betplaced.html', DATA=data)
 
 
