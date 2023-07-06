@@ -79,8 +79,10 @@ def apply_to_jobs(id):
   data = request.form.to_dict()
   total_data_of_player = get_stats_from_db(id)
   player_name = total_data_of_player[1]
+  r = total_data_of_player[5]
   amount = data.get('amount')  # Extract the 'amount' value from the dictionary
-  add_betto_db(amount, player_name)  # Pass the 'amount' value as an argument
+  add_betto_db(amount, player_name,
+               r)  # Pass the 'amount' value as an argument
   return render_template('betplaced.html', DATA=data)
 
 

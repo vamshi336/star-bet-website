@@ -42,7 +42,8 @@ def get_stats_from_db(id=None):
       return rows[0]
 
 
-def add_betto_db(amount, player_name):
-  query = "INSERT INTO bettable (amount, P_name) VALUES (:b_amount, :p_name)"
+def add_betto_db(amount, player_name, r):
+  query = "INSERT INTO bettable (amount, P_name,ratio) VALUES (:b_amount, :p_name,:b_ratio)"
   with engine.connect() as conn:
-    conn.execute(text(query).params(b_amount=amount, p_name=player_name))
+    conn.execute(
+      text(query).params(b_amount=amount, p_name=player_name, b_ratio=r))
