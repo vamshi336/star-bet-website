@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
-from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db
+from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db, add_newuser_to_db, get_users_data
 from flask import jsonify
 
 app = Flask(__name__)
@@ -26,41 +26,34 @@ def wallet():
 
 @app.route('/sinin', methods=['POST', 'GET'])
 def button_clicked():
-  return render_template('sinin.html')
+  return render_template('login.html')
 
 
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-  return render_template("login.html")
+@app.route('/signinsuccess', methods=['POST', 'GET'])
+def success():
+  username = request.form['username']
+  password = request.form['password']
+
+  user_data = get_users_data(username)
+
+  if password == user_data['password']:
+    return redirect('/')
+  else:
+    return jsonify({'message': 'Failure'})
 
 
-@app.route('/sinup', methods=['POST', 'GET'])
-def sinup():
-  # Handle button click logic here
-  return render_template('sinup.html')
-
-
-@app.route('/sinup/s', methods=['POST'])
+@app.route('/signup/s', methods=['POST', 'GET'])
 def signup():
+  return render_template("signup.html")
+
+
+@app.route('/signup', methods=['POST'])
+def signups():
   # Retrieve form data
   username = request.form['username']
   email = request.form['email']
   password = request.form['password']
-
-  # Create a cursor object to execute queries
-  cursor = db.cursor()
-
-  # Execute the query to insert user data into the database
-  query = "INSERT INTO Users (username, email, password) VALUES (%s, %s, %s)"
-  values = (username, email, password)
-  cursor.execute(query, values)
-
-  # Commit the changes to the database
-  db.commit()
-
-  # Close the cursor
-  cursor.close()
-
+  add_newuser_to_db(username, email, password)
   return "Registration successful!"
 
 

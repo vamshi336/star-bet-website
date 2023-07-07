@@ -47,3 +47,37 @@ def add_betto_db(amount, player_name, r):
   with engine.connect() as conn:
     conn.execute(
       text(query).params(b_amount=amount, p_name=player_name, b_ratio=r))
+
+
+def add_newuser_to_db(username, email, password):
+  query = "INSERT INTO Users (Username, Email, Password) VALUES (:b_username, :b_email, :b_password)"
+  with engine.connect() as conn:
+    conn.execute(
+      text(query).params(b_username=username,
+                         b_email=email,
+                         b_password=password))
+
+
+def add_newuser_to_db(username, email, password):
+  query = "insert into Users(Username,Email,Password) VALUES(:b_username,:b_email,:b_password)"
+  with engine.connect() as conn:
+    conn.execute(
+      text(query).params(b_username=username,
+                         b_email=email,
+                         b_password=password))
+
+
+def get_users_data(username):
+  with engine.connect() as conn:
+    query = text(
+      "SELECT username, email, password FROM Users WHERE username=:val")
+    result = conn.execute(query, {"val": username})
+    row = result.fetchone()
+
+  if row is not None:
+    username = row[0]
+    email = row[1]
+    password = row[2]
+    return {'username': username, 'email': email, 'password': password}
+
+  return None
