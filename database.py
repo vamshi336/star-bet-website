@@ -13,6 +13,17 @@ with engine.connect() as conn:
   result = conn.execute(text("select * from stats"))
   xyz = result.all()
   print(xyz)
+  
+@login_manager.user_loader
+def load_user(user_id):
+    user_data = get_users_data(user_id)
+    if user_data:
+        # Create a User object using the retrieved data from the database
+        user = User(user_data['id'], user_data['username'], user_data['email'], user_data['password'])
+        return user
+    else:
+        return None
+
 
 
 def load_stats_from_db():
@@ -81,3 +92,9 @@ def get_users_data(username):
     return {'username': username, 'email': email, 'password': password}
 
   return None
+
+
+def load_user(user_id):
+  # Implement the logic to load the user object based on user_id
+  # Return the user object associated with the user_id
+  return User.query.get(int(user_id))  # Replace with your own implementation

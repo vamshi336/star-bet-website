@@ -1,10 +1,45 @@
+
+
+
 from flask import Flask, render_template, redirect, url_for, request
 from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db, add_newuser_to_db, get_users_data
 from flask import jsonify
+from flask_login import login_required, LoginManager
 
 app = Flask(__name__)
 
+class User:
+    def __init__(self, user_id, username, email, password):
+        self.id = user_id
+        self.username = username
+        self.email = email
+        self.password = password
+
+    def get_id(self):
+        return str(self.id)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    user_data = get_users_data(user_id)
+    if user_data:
+        # Create a User object using the retrieved data from the database
+        user = User(user_data['id'], user_data['username'], user_data['email'], user_data['password'])
+        return user
+    else:
+        return None
+
 Bets = ['india', 'pak', 'sa', 'nz']
+
+# Rest of your code...
+
+
+# Rest of your code...
+
+# Rest of your code...
+
 
 
 @app.route("/")
@@ -14,11 +49,12 @@ def hallo():
 
 
 @app.route("/wallet")
+@login_required
 def wallet():
   return '''
   <html>
   <head>
-  helo
+  helo your wallet balance is $500.
   </head>
   </html>
 '''

@@ -45,6 +45,18 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-login"
+version = "0.6.2"
+description = "User authentication and session management for Flask."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Flask = ">=1.0.4"
+Werkzeug = ">=1.0.1"
+
+[[package]]
 name = "greenlet"
 version = "2.0.2"
 description = "Lightweight in-process concurrent programming"
@@ -146,13 +158,14 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "42765935c2e4a181846283c8057c1789ba7e6d9a5a8bc5f81b9b23a82856b97a"
+content-hash = "96da17c63da22757119e9b1c418f7ba8f8b67583b2f37971faec9c3828b67d41"
 
 [metadata.files]
 blinker = []
 click = []
 colorama = []
 flask = []
+flask-login = []
 greenlet = []
 itsdangerous = []
 jinja2 = []
