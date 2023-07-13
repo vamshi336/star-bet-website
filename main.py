@@ -33,19 +33,11 @@ class User:
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-Bets = ['india', 'pak', 'sa', 'nz']
-
-# Rest of your code...
-
-# Rest of your code...
-
-# Rest of your code...
-
 
 @app.route("/")
 def hallo():
   RECORDS = load_stats_from_db()
-  return render_template('home.html', records=RECORDS, bets=Bets)
+  return render_template('home.html', records=RECORDS)
 
 
 @app.route("/wallet")
