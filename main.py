@@ -60,19 +60,24 @@ def button_clicked():
 @login_manager.user_loader
 @app.route('/signinsuccess', methods=['POST', 'GET'])
 def success():
-  username = request.form['username']
-  password = request.form['password']
+  if request.method == 'POST':
+    username = request.form['username']
+    password = request.form['password']
 
-  user_data = get_users_data(username)
+    user_data = get_users_data(username)
 
-  if user_data and password == user_data['password']:
-    user_id = username  # Use the username as the user ID
-    user = User(user_id, user_data['username'], user_data['email'],
-                user_data['password'])
-    login_user(user)
-    return render_template('home.html')
+    if user_data and password == user_data['password']:
+      user_id = username  # Use the username as the user ID
+      user = User(user_id, user_data['username'], user_data['email'],
+                  user_data['password'])
+      login_user(user)
+      return render_template('home.html')
+    else:
+      return "Invalid username or password"
   else:
-    return "Invalid username or password"
+    # Handle GET request for the sign-in success page
+    # You can redirect or render a different template as needed
+    return render_template('signinsuccess.html')
 
 
 @app.route('/signup/s', methods=['POST', 'GET'])
