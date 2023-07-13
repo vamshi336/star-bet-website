@@ -13,17 +13,6 @@ with engine.connect() as conn:
   result = conn.execute(text("select * from stats"))
   xyz = result.all()
   print(xyz)
-  
-@login_manager.user_loader
-def load_user(user_id):
-    user_data = get_users_data(user_id)
-    if user_data:
-        # Create a User object using the retrieved data from the database
-        user = User(user_data['id'], user_data['username'], user_data['email'], user_data['password'])
-        return user
-    else:
-        return None
-
 
 
 def load_stats_from_db():
@@ -69,13 +58,20 @@ def add_newuser_to_db(username, email, password):
                          b_password=password))
 
 
-def add_newuser_to_db(username, email, password):
-  query = "insert into Users(Username,Email,Password) VALUES(:b_username,:b_email,:b_password)"
+def add_new_user_to_db(username, email, password):
+  query = "INSERT INTO Users (Username, Email, Password) VALUES (:b_username, :b_email, :b_password)"
   with engine.connect() as conn:
-    conn.execute(
+    result = conn.execute(
       text(query).params(b_username=username,
                          b_email=email,
                          b_password=password))
+    user_id = result.lastrowid
+
+    # Update the inserted row with the generated user_id
+    update_query = "UPDATE Users SET user_id = :b_user_id WHERE ID = :b_id"
+    conn.execute(text(update_query).params(b_user_id=user_id, b_id=user_id))
+
+    return user_id
 
 
 def get_users_data(username):
@@ -92,9 +88,3 @@ def get_users_data(username):
     return {'username': username, 'email': email, 'password': password}
 
   return None
-
-
-def load_user(user_id):
-  # Implement the logic to load the user object based on user_id
-  # Return the user object associated with the user_id
-  return User.query.get(int(user_id))  # Replace with your own implementation

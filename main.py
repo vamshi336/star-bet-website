@@ -1,45 +1,45 @@
-
-
-
 from flask import Flask, render_template, redirect, url_for, request
 from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db, add_newuser_to_db, get_users_data
 from flask import jsonify
 from flask_login import login_required, LoginManager
+from flask_login import login_user
 
 app = Flask(__name__)
 
-class User:
-    def __init__(self, user_id, username, email, password):
-        self.id = user_id
-        self.username = username
-        self.email = email
-        self.password = password
+import os
 
-    def get_id(self):
-        return str(self.id)
+app = Flask(__name__)
+
+# Generate a secret key
+secret_key = os.urandom(24)
+app.secret_key = secret_key
+
+
+class User:
+
+  def __init__(self, user_id, username, email, password):
+    self.id = user_id
+    self.username = username
+    self.email = email
+    self.password = password
+
+  def get_id(self):
+    return str(self.id)
+
+  def is_active(self):
+    return True  # Replace with your own logic to determine if the user account is active or not
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-@login_manager.user_loader
-def load_user(user_id):
-    user_data = get_users_data(user_id)
-    if user_data:
-        # Create a User object using the retrieved data from the database
-        user = User(user_data['id'], user_data['username'], user_data['email'], user_data['password'])
-        return user
-    else:
-        return None
 
 Bets = ['india', 'pak', 'sa', 'nz']
 
 # Rest of your code...
 
-
 # Rest of your code...
 
 # Rest of your code...
-
 
 
 @app.route("/")
@@ -65,6 +65,7 @@ def button_clicked():
   return render_template('login.html')
 
 
+@login_manager.user_loader
 @app.route('/signinsuccess', methods=['POST', 'GET'])
 def success():
   username = request.form['username']
@@ -72,10 +73,14 @@ def success():
 
   user_data = get_users_data(username)
 
-  if password == user_data['password']:
-    return redirect('/')
+  if user_data and password == user_data['password']:
+    user_id = username  # Use the username as the user ID
+    user = User(user_id, user_data['username'], user_data['email'],
+                user_data['password'])
+    login_user(user)
+    return render_template('home.html')
   else:
-    return jsonify({'message': 'Failure'})
+    return "Invalid username or password"
 
 
 @app.route('/signup/s', methods=['POST', 'GET'])
