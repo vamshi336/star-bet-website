@@ -4,6 +4,7 @@ from flask import jsonify
 from flask_login import login_required, LoginManager
 from flask_login import login_user
 from flask_login import current_user
+from flask_login import logout_user
 
 import os
 
@@ -42,9 +43,8 @@ login_manager.init_app(app)
 @app.route("/home")
 @login_required
 def hallo():
-    RECORDS = load_stats_from_db()
-    return render_template('home.html', records=RECORDS)
-
+  RECORDS = load_stats_from_db()
+  return render_template('home.html', records=RECORDS)
 
 
 @app.route("/wallet")
@@ -92,9 +92,14 @@ def success():
     login_user(user)
     return redirect(url_for('hallo'))
 
-
   else:
     return "Invalid username or password"
+
+
+@app.route('/logout')
+def logout():
+  logout_user()
+  return redirect(url_for('hallo'))
 
 
 @app.route('/signup/s', methods=['POST', 'GET'])
