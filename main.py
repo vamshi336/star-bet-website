@@ -41,8 +41,11 @@ login_manager.init_app(app)
 
 @app.route("/")
 def hallo():
-  RECORDS = load_stats_from_db()
-  return render_template('home.html', records=RECORDS)
+  if current_user.is_authenticated:
+    RECORDS = load_stats_from_db()
+    return render_template('home.html', records=RECORDS)
+  else:
+    return redirect(url_for('button_clicked'))
 
 
 @app.route("/wallet")
