@@ -3,6 +3,7 @@ from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_bet
 from flask import jsonify
 from flask_login import login_required, LoginManager
 from flask_login import login_user
+from flask_login import current_user
 
 import os
 
@@ -12,26 +13,26 @@ app = Flask(__name__)
 secret_key = os.urandom(24)
 app.secret_key = secret_key
 
+
 class User:
-    def __init__(self, user_id, username, email, password):
-        self.user_id = user_id
-        self.username = username
-        self.email = email
-        self.password = password
 
-    def is_authenticated(self):
-        return True  # Modify this according to your authentication logic
+  def __init__(self, user_id, username, email, password):
+    self.user_id = user_id
+    self.username = username
+    self.email = email
+    self.password = password
 
-    def is_active(self):
-        return True
+  def is_authenticated(self):
+    return True  # Modify this according to your authentication logic
 
-    def is_anonymous(self):
-        return False
+  def is_active(self):
+    return True
 
-    def get_id(self):
-        return str(self.user_id)
+  def is_anonymous(self):
+    return False
 
-
+  def get_id(self):
+    return str(self.user_id)
 
 
 login_manager = LoginManager()
@@ -47,13 +48,17 @@ def hallo():
 @app.route("/wallet")
 @login_required
 def wallet():
-  return '''
-  <html>
-  <head>
-  helo your wallet balance is $500.
-  </head>
-  </html>
-'''
+  if current_user.is_authenticated:
+    return '''
+        <html>
+        <head>
+        <title>Wallet</title>
+        </head>
+        <body>
+        <h1>Hello, your wallet balance is $500.</h1>
+        </body>
+        </html>
+        '''
 
 
 @app.route('/sinin', methods=['POST', 'GET'])
