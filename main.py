@@ -4,8 +4,6 @@ from flask import jsonify
 from flask_login import login_required, LoginManager
 from flask_login import login_user
 
-app = Flask(__name__)
-
 import os
 
 app = Flask(__name__)
@@ -14,20 +12,26 @@ app = Flask(__name__)
 secret_key = os.urandom(24)
 app.secret_key = secret_key
 
-
 class User:
+    def __init__(self, user_id, username, email, password):
+        self.user_id = user_id
+        self.username = username
+        self.email = email
+        self.password = password
 
-  def __init__(self, user_id, username, email, password):
-    self.id = user_id
-    self.username = username
-    self.email = email
-    self.password = password
+    def is_authenticated(self):
+        return True  # Modify this according to your authentication logic
 
-  def get_id(self):
-    return str(self.id)
+    def is_active(self):
+        return True
 
-  def is_active(self):
-    return True  # Replace with your own logic to determine if the user account is active or not
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.user_id)
+
+
 
 
 login_manager = LoginManager()
@@ -58,26 +62,30 @@ def button_clicked():
 
 
 @login_manager.user_loader
+def load_user(user_id):
+  # Load the user from the user_id (username in your case)
+  user_data = get_users_data(user_id)
+  if user_data:
+    return User(user_id, user_data['username'], user_data['email'],
+                user_data['password'])
+  return None
+
+
 @app.route('/signinsuccess', methods=['POST', 'GET'])
 def success():
-  if request.method == 'POST':
-    username = request.form['username']
-    password = request.form['password']
+  username = request.form['username']
+  password = request.form['password']
 
-    user_data = get_users_data(username)
+  user_data = get_users_data(username)
 
-    if user_data and password == user_data['password']:
-      user_id = username  # Use the username as the user ID
-      user = User(user_id, user_data['username'], user_data['email'],
-                  user_data['password'])
-      login_user(user)
-      return render_template('home.html')
-    else:
-      return "Invalid username or password"
+  if user_data and password == user_data['password']:
+    user_id = username  # Use the username as the user ID
+    user = User(user_id, user_data['username'], user_data['email'],
+                user_data['password'])
+    login_user(user)
+    return redirect(url_for('wallet'))
   else:
-    # Handle GET request for the sign-in success page
-    # You can redirect or render a different template as needed
-    return render_template('signinsuccess.html')
+    return "Invalid username or password"
 
 
 @app.route('/signup/s', methods=['POST', 'GET'])
