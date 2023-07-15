@@ -40,9 +40,11 @@ login_manager.init_app(app)
 
 
 @app.route("/home")
+@login_required
 def hallo():
-  RECORDS = load_stats_from_db()
-  return render_template('home.html', records=RECORDS)
+    RECORDS = load_stats_from_db()
+    return render_template('home.html', records=RECORDS)
+
 
 
 @app.route("/wallet")
@@ -89,6 +91,7 @@ def success():
                 user_data['password'])
     login_user(user)
     return redirect(url_for('hallo'))
+
 
   else:
     return "Invalid username or password"
