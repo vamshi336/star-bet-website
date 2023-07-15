@@ -39,13 +39,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-@app.route("/")
+@app.route("/home")
 def hallo():
-  if current_user.is_authenticated:
-    RECORDS = load_stats_from_db()
-    return render_template('home.html', records=RECORDS)
-  else:
-    return redirect(url_for('button_clicked'))
+  RECORDS = load_stats_from_db()
+  return render_template('home.html', records=RECORDS)
 
 
 @app.route("/wallet")
@@ -64,7 +61,7 @@ def wallet():
         '''
 
 
-@app.route('/sinin', methods=['POST', 'GET'])
+@app.route('/', methods=['POST', 'GET'])
 def button_clicked():
   return render_template('login.html')
 
@@ -91,7 +88,8 @@ def success():
     user = User(user_id, user_data['username'], user_data['email'],
                 user_data['password'])
     login_user(user)
-    return redirect(url_for('wallet'))
+    return redirect(url_for('hallo'))
+
   else:
     return "Invalid username or password"
 
