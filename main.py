@@ -44,7 +44,7 @@ login_manager.init_app(app)
 @login_required
 def hallo():
   RECORDS = load_stats_from_db()
-  return render_template('home.html', records=RECORDS)
+  return render_template('home.html', records=RECORDS,username=current_user.username)
 
 
 @app.route("/wallet")
