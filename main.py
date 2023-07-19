@@ -5,8 +5,10 @@ from flask_login import login_required, LoginManager
 from flask_login import login_user
 from flask_login import current_user
 from flask_login import logout_user
-
 import os
+from flask import session
+
+port = int(os.environ.get('PORT', 5000))
 
 app = Flask(__name__)
 
@@ -41,26 +43,20 @@ login_manager.init_app(app)
 
 
 @app.route("/home")
-@login_required
 def hallo():
   RECORDS = load_stats_from_db()
-  return render_template('home.html', records=RECORDS,username=current_user.username)
+  return render_template('home.html',
+                         records=RECORDS,
+                         username=current_user.username)
 
 
-@app.route("/wallet")
-@login_required
-def wallet():
-  if current_user.is_authenticated:
-    return '''
-        <html>
-        <head>
-        <title>Wallet</title>
-        </head>
-        <body>
-        <h1>Hello, your wallet balance is $500.</h1>
-        </body>
-        </html>
-        '''
+@app.route("/wallet/<username>")
+def wallet(username):
+    session['current_user'] = username  # Store the username in the session
+    current_user = session.get('current_user')  # Retrieve the current user from the session
+    balance = get_bal_from_wallet(current_user)  # Assuming get_bal_from_wallet() retrieves the balance for the given username
+    return render_template("wallet.html", balance=balance)
+
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -140,4 +136,4 @@ def apply_to_jobs(id):
 
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', debug=True)
+  app.run(host='0.0.0.0', port=port, debug=True)

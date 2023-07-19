@@ -9,11 +9,19 @@ engine = create_engine(my_secret,
                        connect_args={"ssl": {
                          "ssl_ca": "/etc/ssl/cert.pem"
                        }})
-with engine.connect() as conn:
-  result = conn.execute(text("select * from stats"))
-  xyz = result.all()
-  print(xyz)
 
+def get_bal_from_wallet(username):
+    with engine.connect() as conn:
+        query = text("SELECT balance FROM Users WHERE Username=:val")
+        result = conn.execute(query, {'val': username})
+        row = result.fetchone()
+        if row is not None:
+            balance = row[0]  # Access the balance column of the retrieved row
+            return balance
+        else:
+            return None  # Return None if the user is not found or balance is not available
+
+  
 
 def load_stats_from_db():
   with engine.connect() as conn:
@@ -88,3 +96,9 @@ def get_users_data(username):
     return {'username': username, 'email': email, 'password': password}
 
   return None
+
+  current_user = "asha"
+  with engine.connect() as conn:
+    query = text("select balance from Users where Username=:val")
+    result = conn.execute(query, {"val": current_user}).fetchone()
+    print("Balance result:", result)
