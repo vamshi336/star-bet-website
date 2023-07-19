@@ -50,13 +50,16 @@ def hallo():
                          username=current_user.username)
 
 
-@app.route("/wallet/<username>")
-def wallet(username):
-    session['current_user'] = username  # Store the username in the session
-    current_user = session.get('current_user')  # Retrieve the current user from the session
-    balance = get_bal_from_wallet(current_user)  # Assuming get_bal_from_wallet() retrieves the balance for the given username
-    return render_template("wallet.html", balance=balance)
-
+@app.route("/wallet")
+def wallet():
+  current_user = session.get(
+    'current_user')  # Retrieve the current user from the session
+  if current_user is None:
+    return "User not logged in"  # Handle the case where the user is not logged in
+  balance = get_bal_from_wallet(
+    current_user
+  )  # Assuming get_bal_from_wallet() retrieves the balance for the given username
+  return render_template("wallet.html", balance=balance)
 
 
 @app.route('/', methods=['POST', 'GET'])
