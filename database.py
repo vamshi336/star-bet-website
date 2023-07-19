@@ -97,8 +97,5 @@ def get_users_data(username):
 
   return None
 
-  current_user = "asha"
-  with engine.connect() as conn:
-    query = text("select balance from Users where Username=:val")
-    result = conn.execute(query, {"val": current_user}).fetchone()
-    print("Balance result:", result)
+
+

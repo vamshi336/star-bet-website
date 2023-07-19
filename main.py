@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
-from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db, add_newuser_to_db, get_users_data
+from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db, add_newuser_to_db, get_users_data,get_bal_from_wallet
 from flask import jsonify
 from flask_login import login_required, LoginManager
 from flask_login import login_user
@@ -39,7 +39,8 @@ class User:
 
 
 login_manager = LoginManager()
-login_manager.init_app(app)
+login_manager.init_app(app
+
 
 
 @app.route("/home")
@@ -52,13 +53,7 @@ def hallo():
 
 @app.route("/wallet")
 def wallet():
-  current_user = session.get(
-    'current_user')  # Retrieve the current user from the session
-  if current_user is None:
-    return "User not logged in"  # Handle the case where the user is not logged in
-  balance = get_bal_from_wallet(
-    current_user
-  )  # Assuming get_bal_from_wallet() retrieves the balance for the given username
+  balance = get_bal_from_wallet(current_user.username) 
   return render_template("wallet.html", balance=balance)
 
 
