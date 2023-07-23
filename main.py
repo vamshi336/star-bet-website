@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
-from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db, add_newuser_to_db, get_users_data,get_bal_from_wallet
+from database import load_stats_from_db, get_stats_from_db, row_to_dict, add_betto_db, add_newuser_to_db, get_users_data, get_bal_from_wallet
 from flask import jsonify
 from flask_login import login_required, LoginManager
 from flask_login import login_user
@@ -7,6 +7,7 @@ from flask_login import current_user
 from flask_login import logout_user
 import os
 from flask import session
+from flask_session import Session
 
 port = int(os.environ.get('PORT', 5000))
 
@@ -15,6 +16,12 @@ app = Flask(__name__)
 # Generate a secret key
 secret_key = os.urandom(24)
 app.secret_key = secret_key
+
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = True
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_KEY_PREFIX'] = 'your_prefix_here'  # Change this to a unique prefix
+
 
 
 class User:
@@ -39,22 +46,7 @@ class User:
 
 
 login_manager = LoginManager()
-login_manager.init_app(app
-
-
-
-@app.route("/home")
-def hallo():
-  RECORDS = load_stats_from_db()
-  return render_template('home.html',
-                         records=RECORDS,
-                         username=current_user.username)
-
-
-@app.route("/wallet")
-def wallet():
-  balance = get_bal_from_wallet(current_user.username) 
-  return render_template("wallet.html", balance=balance)
+login_manager.init_app(app)
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -62,6 +54,32 @@ def button_clicked():
   return render_template('login.html')
 
 
+# Define a global variable to store the username
+global_username = None
+
+@app.route('/signinsuccess', methods=['POST', 'GET'])
+def success():
+    global global_username
+
+    username = request.form['username']
+    password = request.form['password']
+
+    user_data = get_users_data(username)
+
+    if user_data and password == user_data['password']:
+        user_id = username
+        user = User(user_id, user_data['username'], user_data['email'],
+                    user_data['password'])
+        login_user(user)
+
+        # Store the username in the global variable
+        global_username = username
+
+        return redirect(url_for('hallo'))
+    else:
+        return "Invalid username or password"
+
+    
 @login_manager.user_loader
 def load_user(user_id):
   # Load the user from the user_id (username in your case)
@@ -72,22 +90,25 @@ def load_user(user_id):
   return None
 
 
-@app.route('/signinsuccess', methods=['POST', 'GET'])
-def success():
-  username = request.form['username']
-  password = request.form['password']
+@app.route("/home")
+def hallo():
+  RECORDS = load_stats_from_db()
+  return render_template('home.html',
+                         records=RECORDS,
+                         username=global_username)
 
-  user_data = get_users_data(username)
 
-  if user_data and password == user_data['password']:
-    user_id = username  # Use the username as the user ID
-    user = User(user_id, user_data['username'], user_data['email'],
-                user_data['password'])
-    login_user(user)
-    return redirect(url_for('hallo'))
+@app.route("/wallet")
+def wallet():
+  # Retrieve the username from the session
+  username = global_username
 
+  if username:
+    balance = get_bal_from_wallet(username)
+    return render_template("wallet.html", balance=balance)
   else:
-    return "Invalid username or password"
+    # Handle the case when the user is not logged in
+    return "Please log in to access the wallet."
 
 
 @app.route('/logout')
