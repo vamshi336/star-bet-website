@@ -6,8 +6,6 @@ from flask_login import login_user
 from flask_login import current_user
 from flask_login import logout_user
 import os
-from flask import session
-from flask_session import Session
 
 port = int(os.environ.get('PORT', 5000))
 
